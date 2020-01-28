@@ -1,15 +1,8 @@
-using Benchmark.Models;
-using Benchmark.services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
-
 namespace Benchmark
 {
     public class BenchmarkFunction
     {
+        /*
         private readonly IGeometryFetcher _geometryFetcher;
 
         public BenchmarkFunction(IGeometryFetcher geometryFetcher)
@@ -50,5 +43,6 @@ namespace Benchmark
 
             return new OkObjectResult(res);
         }
+        */
     }
 }

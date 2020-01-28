@@ -12,6 +12,8 @@ namespace Benchmark.services
     {
         public double Time { get; set; }
 
+        public string Error { get; set; }
+
         //   public Stats Stats { get; set; }
         public TResult Data { get; set; }
     }
@@ -51,6 +53,9 @@ namespace Benchmark.services
                 PatchSize = patch.Data.Length,
                 ForwardCorrect = Equals(forward.Data, payload.NewGeom),
                 UndoCorrect = Equals(reverse.Data, payload.OldGeom),
+                CreateError = patch.Error,
+                ApplyError = forward.Error,
+                UnddoError = reverse.Error
             };
         }
 
@@ -83,26 +88,32 @@ namespace Benchmark.services
             Thread.CurrentThread.Priority =
                 ThreadPriority.Highest; // Prevents "Normal" Threads from interrupting this thread
                 */
-
-            double time = 0;
-            var data = default(TResult);
-            for (var i = 0; i < 2; i++)
+            try
             {
-                stopwatch.Reset();
-                stopwatch.Start();
-                data = method(differ, payload, patch);
-                stopwatch.Stop();
-
-                if (i > 0)
+                double time = 0;
+                var data = default(TResult);
+                for (var i = 0; i < 2; i++)
                 {
-                    time = ((double) stopwatch.ElapsedTicks / Stopwatch.Frequency) * 1000;
-                }
-            }
+                    stopwatch.Reset();
+                    stopwatch.Start();
+                    data = method(differ, payload, patch);
+                    stopwatch.Stop();
 
-            //var mean = Mean(res);
-            // var stDev = StDev(res, mean);
-            //return new Result<TResult>() {Stats = new Stats() {Mean = mean, StDev = stDev}, Data = data};
-            return new Result<TResult>() {Time = time, Data = data};
+                    if (i > 0)
+                    {
+                        time = stopwatch.Elapsed.TotalMilliseconds;
+                    }
+                }
+
+                //var mean = Mean(res);
+                // var stDev = StDev(res, mean);
+                //return new Result<TResult>() {Stats = new Stats() {Mean = mean, StDev = stDev}, Data = data};
+                return new Result<TResult>() {Time = time, Data = data};
+            }
+            catch (Exception e)
+            {
+                return new Result<TResult>() {Error = e.Message};
+            }
         }
     }
 }

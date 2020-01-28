@@ -13,6 +13,7 @@ namespace Benchmark
         {
             builder.AddAppSettingsToConfiguration();
             builder.Services.TryAddTransient<IGeometryFetcher, GeometryFetcher>();
+            builder.Services.TryAddTransient<IResultSaver, ResultSaver>();
         }
     }
 }
